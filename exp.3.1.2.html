@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Management System</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 15px;
+      background: #2c3e50;
+      color: white;
+      border-radius: 8px;
+    }
+
+    .section {
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .add-btn {
+      background: #27ae60;
+      color: white;
+    }
+
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .book-card {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function Library() {
+      const [books, setBooks] = React.useState([
+        { id: 1, title: "The Alchemist" },
+        { id: 2, title: "Atomic Habits" }
+      ]);
+
+      const [search, setSearch] = React.useState("");
+      const [newBook, setNewBook] = React.useState("");
+
+      const addBook = () => {
+        if (newBook.trim() !== "") {
+          setBooks([...books, { id: Date.now(), title: newBook }]);
+          setNewBook("");
+        }
+      };
+
+      const removeBook = (id) => {
+        setBooks(books.filter(book => book.id !== id));
+      };
+
+      const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(search.toLowerCase())
+      );
+
+      return (
+        <div className="wrapper">
+          <header>
+            <h1>Library Management System</h1>
+          </header>
+
+          <div className="section">
+            <h2>Search Book</h2>
+            <input
+              type="text"
+              placeholder="Enter book name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="section">
+            <h2>Add New Book</h2>
+            <input
+              type="text"
+              placeholder="Book title..."
+              value={newBook}
+              onChange={(e) => setNewBook(e.target.value)}
+            />
+            <button className="add-btn" onClick={addBook}>
+              Add Book
+            </button>
+          </div>
+
+          <div className="section">
+            <h2>Available Books</h2>
+            <div className="book-grid">
+              {filteredBooks.map(book => (
+                <div key={book.id} className="book-card">
+                  <p>{book.title}</p>
+                  <button
+                    className="remove-btn"
+                    onClick={() => removeBook(book.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <footer>
+            © 2026 Library System
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<Library />);
+  </script>
+</body>
+</html>
